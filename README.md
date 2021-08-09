@@ -1,4 +1,4 @@
-# ATR_Max_Area_Calculator
+# ATR Max Area Calculator
 Intital version by Lachlan Yatras and Joshua Yatras.
 This version built by Craig D'Costa, August 9 2021.
 

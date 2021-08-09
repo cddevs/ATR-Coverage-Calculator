@@ -3,14 +3,11 @@ import math
 def another():
     while True:
         user_input = input("\nWould you like complete another coverage calculation? (\"y\" or \"n\") ")
-        if user_input.isalpha():
-            if user_input.lower() == "y":
-                return True
-            elif user_input.lower() == "n":            
-                print("\nThank you and goodbye!")
-                return False
-            else:
-                print("\nError: Invalid input.")
+        if user_input.lower() == "y":
+            return True
+        elif user_input.lower() == "n":            
+            print("\nThank you and goodbye!")
+            return False
         else:
             print("\nError: Invalid input.")
 
@@ -31,9 +28,8 @@ def calculate_coverage_area(height, scan_angle, scan_angle_use):
 
 def check_input_number(input):
     try:
-        # Convert it into float
-        if (float(input) > 0):
-            return True
+        # Try to convert it to float & test it is greater then 0.
+        return float(input) > 0
     except ValueError:
         return False
 

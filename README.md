@@ -8,14 +8,14 @@ The area calculation formulas implemented are available on pages 22 and 23 of th
 ## Version History
 
 ### 2.0.0
-August 31 2021
-Add check to determine if file is being called explicitly.
-Add support for Metric and Imperial System of Measurment.
-Update coverage calculations to include the Typical and Max Accuracy calculations.
-Moved calculation results printout to separate function.
-Updated results printout to include the Unit of Measurment and squared superscript.
-Updated dispaly/output for prettier appearance.
+###### August 31 2021
+1. Add check to determine if file is being called explicitly.
+2. Add support for Metric and Imperial System of Measurment.
+3. Update coverage calculations to include the Typical and Max Accuracy calculations.
+4. Moved calculation results printout to separate function.
+5. Updated results printout to include the Unit of Measurment and squared superscript.
+6. Updated dispaly/output for prettier appearance.
 
 ### 1.0.0 - Initial Release
-August 9 2021
-Written using a base provided by L. Yatras and J. Yatras.
+###### August 9 2021
+1. Written using a base provided by L. Yatras and J. Yatras.

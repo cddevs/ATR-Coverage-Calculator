@@ -105,7 +105,7 @@ def set_SoM():
         if user_input.lower() == "y":
             return ["Metric", "metres", 3.6576, 6.0960]
         elif user_input.lower() == "n":            
-            return ["Imperial", "feet", 12, 20]
+            return ["Imperial", "feet", 12.00, 20.00]
         else:
             print("\nError: Invalid input.")
 

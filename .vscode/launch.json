@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${fileDirname}",
-            "stopOnEntry": true
+            "stopOnEntry": tru
         }
     ]
 }

@@ -17,6 +17,7 @@ def calculate_coverage(height_atr, height_tag):
     height_tag = float(height_tag)
     height_max_accuracy = height_atr - height_tag
     
+    # Radius calculation validated using https://www.omnicalculator.com/math/triangle-30-60-90
     default_circle_radius = math.tan(math.radians(60)) * height_atr
     default_spacing = 2 * default_circle_radius #This is also equal to the default circle diameter
     default_circle_area = math.pi * default_circle_radius**2
@@ -65,38 +66,48 @@ def coverage(som):
         user_input_height_atr = input("\nEnter the Height of ATR7000 from the Ground: ")
         if check_input_number(user_input_height_atr, som[2], som[3]):
             while True:
-                user_input_height_tag = input("\nEnter the Maximum Tag Height: ")
+                user_input_height_tag = input("\nEnter the Maximum or Average Tag Height: ")
                 if check_input_number(user_input_height_tag, 0, user_input_height_atr):                
                     results = calculate_coverage(user_input_height_atr, user_input_height_tag)
 
                     # Print out the default results
-                    description = "ground level the Default"
-                    printout_coverage(som[1], description, results["height_atr"], results["default_hex_cell_area"], results["default_spacing"], results["default_circle_radius"], results["default_spacing"], results["default_circle_area"])
+                    description = f"Default"
+                    printout_coverage(description, som[1], 60, results["height_atr"], 0, results["default_hex_cell_area"], results["default_spacing"], results["default_circle_radius"], results["default_spacing"], results["default_circle_area"])
 
                     # Print out the typical results
-                    description = f"the Maximum Tag Height of {results['height_tag']:.2f} {som[1]} the Typical"
-                    printout_coverage(som[1], description, results["height_atr"], results["typical_hex_cell_area"], results["typical_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"])
+                    description = f"Typical"
+                    printout_coverage(description, som[1], 54.7, results["height_atr"], results["height_tag"], results["typical_hex_cell_area"], results["typical_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"])
 
                     # Print out the max results
-                    description = f"the Maximum Tag Height of {results['height_tag']:.2f} {som[1]} the Maximum Accuracy"
-                    printout_coverage(som[1], description, results["height_atr"], results["max_accuracy_hex_cell_area"], results["max_accuracy_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"])
+                    description = f"Maximum Accuracy"
+                    notes = "Please note, spacing is reduced by 15% in this scenario."
+                    printout_coverage(description, som[1], 54.7, results["height_atr"], results["height_tag"], results["max_accuracy_hex_cell_area"], results["max_accuracy_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"], notes)
 
-                    break # Break tag input loop
+                    break # Break tag height input loop
                 else:
                     print(f"\nError: Invalid Tag height. Accepted values are between 0.00 and {user_input_height_atr} {som[1]} inclusive.")
-            break # Break ATR input loop
+            break # Break ATR height input loop
         else:
             print(f"\nError: Invalid ATR height. Accepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.")
 
 
-def printout_coverage(uom, description, height_atr, hex_cell_area, spacing, circle_radius, circle_diametre, circle_area):
-    print(f"\nWhen mounted at a height of {height_atr:.2f} {uom}, at {description}:")
+def printout_coverage(description, uom, scan_angle, height_atr, height_tag, hex_cell_area, spacing, circle_radius, circle_diametre, circle_area, notes = ""):
+    print(f"\n\n{description} Coverage Area:")
+    
+    print(f"\n\tATR mount height = {height_atr:.2f} {uom}")
+    print(f"\tElevation scan angle = {scan_angle}\N{DEGREE SIGN}")
+    print(f"\tMaximum/Average Tag Height = {height_tag:.2f} {uom}")
+    
     print(f"\n\tATR Hexagonal Coverage Area = {hex_cell_area:.2f} {uom}\N{SUPERSCRIPT TWO}")
     print(f"\tThe spacing between each ATR = {spacing:.2f} {uom}")
-    print(f"\n\tAs an FYI:")
-    print(f"\t\tRadius of the Circle Coverage Area = {circle_radius:.2f} {uom}")
-    print(f"\t\tDiameter of the Circle Coverage Area = {circle_diametre:.2f} {uom}")
-    print(f"\t\tThe Circle Coverage Area = {circle_area:.2f} {uom}\N{SUPERSCRIPT TWO}")
+    
+    if notes != "":
+        print(f"\t\t{notes}")
+    
+    print(f"\n\tAs an FYI, Circle Coverage:")
+    print(f"\n\t\tRadius = {circle_radius:.2f} {uom}")
+    print(f"\t\tDiameter = {circle_diametre:.2f} {uom}")
+    print(f"\t\tArea = {circle_area:.2f} {uom}\N{SUPERSCRIPT TWO}")
 
 
 def set_SoM():

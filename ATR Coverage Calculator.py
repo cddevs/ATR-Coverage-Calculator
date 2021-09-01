@@ -80,7 +80,7 @@ def coverage(som):
 
                     # Print out the max results
                     description = f"Maximum Accuracy"
-                    notes = "Please note, spacing is reduced by 15% in this scenario."
+                    notes = "Please note, to achieve maximum accuracy, spacing has been reduced by 15%."
                     printout_coverage(description, som[1], 54.7, results["height_atr"], results["height_tag"], results["max_accuracy_hex_cell_area"], results["max_accuracy_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"], notes)
 
                     break # Break tag height input loop

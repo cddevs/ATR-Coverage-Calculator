@@ -72,16 +72,16 @@ def coverage(som):
 
                     # Print out the default results
                     description = f"Default"
-                    printout_coverage(description, som[1], 60, results["height_atr"], 0, results["default_hex_cell_area"], results["default_spacing"], results["default_circle_radius"], results["default_spacing"], results["default_circle_area"])
+                    printout_coverage(description, som[1], 60.00, results["height_atr"], 0, results["default_hex_cell_area"], results["default_spacing"], results["default_circle_radius"], results["default_spacing"], results["default_circle_area"])
 
                     # Print out the typical results
                     description = f"Typical"
-                    printout_coverage(description, som[1], 54.7, results["height_atr"], results["height_tag"], results["typical_hex_cell_area"], results["typical_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"])
+                    printout_coverage(description, som[1], 54.70, results["height_atr"], results["height_tag"], results["typical_hex_cell_area"], results["typical_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"])
 
                     # Print out the max results
                     description = f"Maximum Accuracy"
                     notes = "Please note, to achieve maximum accuracy, spacing has been reduced by 15%."
-                    printout_coverage(description, som[1], 54.7, results["height_atr"], results["height_tag"], results["max_accuracy_hex_cell_area"], results["max_accuracy_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"], notes)
+                    printout_coverage(description, som[1], 54.70, results["height_atr"], results["height_tag"], results["max_accuracy_hex_cell_area"], results["max_accuracy_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"], notes)
 
                     break # Break tag height input loop
                 else:

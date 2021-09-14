@@ -21,7 +21,6 @@ class mainWindow():
   def __init__(self, master):
     self.master = master
     # tk.Frame.__init__(self, self.master)
-    self.results_displayed = False
     self.configure_gui()
     self.create_widgets()
     self.destroy_splash_and_start()
@@ -30,7 +29,7 @@ class mainWindow():
   def about(self):
     messagebox.showinfo('About', \
       f'ATR Coverage Calculator\
-      \n\n\tVersion: 3.0.1\
+      \n\n\tVersion: 3.0.2\
       \n\n\tRelease Date: Tuesday September 14 2021\
       \n\nhttps://github.com/cddevs/ATR-Coverage-Calculator/releases\
       \n\n©{self.current_date.year} C. D\'Costa'
@@ -54,6 +53,7 @@ class mainWindow():
     self.create_frame_header()
     self.create_frame_content()
     self.create_frame_footer()
+    self.create_results_display()
   
 
   def create_frame_header(self):
@@ -105,6 +105,133 @@ class mainWindow():
     self.menubar.add_cascade(label='System of Measurement', menu=menu_system_of_measurement)
     
     self.menubar.add_command(label='About', command=self.about)
+
+
+  def create_results_display(self):
+    self.results_output_height_atr = tk.StringVar()
+    self.results_output_height_tag = tk.StringVar()
+    self.results_output_height_max_accuracy = tk.StringVar()
+    self.results_output_default_circle_radius = tk.StringVar()
+    self.results_output_default_spacing = tk.StringVar()
+    self.results_output_default_circle_area = tk.StringVar()
+    self.results_output_default_hex_cell_area = tk.StringVar()
+    self.results_output_typical_circle_radius = tk.StringVar()
+    self.results_output_typical_spacing = tk.StringVar()
+    self.results_output_typical_circle_area = tk.StringVar()
+    self.results_output_typical_hex_cell_area = tk.StringVar()
+    self.results_output_max_accuracy_spacing = tk.StringVar()
+    self.results_output_max_accuracy_hex_cell_area = tk.StringVar()
+
+    # Frame to contain Results Table frames
+    self.frame_results = tk.Frame(self.frame_content, background='#000000', height=290)
+    self.frame_results.place(x=50, rely = 0.48)
+    
+    label_results_max_accuracy_note = tk.Label(self.frame_results, background='#000000', foreground='#FFFFFF', font=('Arial', 12), text=f'\n* For maximum accuracy coverage, ATR spacing has been reduced by 15%')
+    label_results_max_accuracy_note.pack(side='bottom')
+
+    # Frame for Results Table row headings
+    self.frame_results_headings = tk.Frame(self.frame_results, background='#000000', height=290)
+    self.frame_results_headings.pack(side='left')
+
+    label_heading_spacer = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15))
+    label_heading_spacer.pack(anchor='e')
+    label_heading_height_atr = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'ATR Mount Height')
+    label_heading_height_atr.pack(anchor='e')
+    label_heading_elevation_scan_angle = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Elevation Scan Angle')
+    label_heading_elevation_scan_angle.pack(anchor='e')
+    label_heading_height_tag = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Maximum/Average Tag Height')
+    label_heading_height_tag.pack(anchor='e')
+    label_heading_atr_hexagonal_coverage_area = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'ATR Hexagonal Coverage Area')
+    label_heading_atr_hexagonal_coverage_area.pack(anchor='e')
+    label_heading_atr_spacing = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'ATR Spacing')
+    label_heading_atr_spacing.pack(anchor='e')
+    label_heading_circle_coverage = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'FYI - Circle Coverage')
+    label_heading_circle_coverage.pack(anchor='w')
+    label_heading_circle_coverage_radius = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Radius')
+    label_heading_circle_coverage_radius.pack(anchor='e')
+    label_heading_circle_coverage_diametre = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Diametre')
+    label_heading_circle_coverage_diametre.pack(anchor='e')
+    label_heading_circle_coverage_area = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Area')
+    label_heading_circle_coverage_area.pack(anchor='e')
+
+    # Frame for Results Table Default coloumn
+    self.frame_results_default = tk.Frame(self.frame_results, background='#000000', height=290)
+    self.frame_results_default.pack(side='left')
+
+    label_results_default = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f' Default Coverage ')
+    label_results_default.pack()
+    label_results_default_height_atr = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_height_atr}')
+    label_results_default_height_atr.pack()    
+    label_results_default_elevation_scan_angle = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'60.00\N{DEGREE SIGN}')
+    label_results_default_elevation_scan_angle.pack()
+    label_results_default_height_tag = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_height_tag}')
+    label_results_default_height_tag.pack()
+    label_results_default_hex_cell_area = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_default_hex_cell_area}')
+    label_results_default_hex_cell_area.pack()
+    label_results_default_spacing = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_default_spacing}')
+    label_results_default_spacing.pack()
+    label_results_default_circle_coverage_spacer = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'')
+    label_results_default_circle_coverage_spacer.pack()
+    label_results_default_circle_radius = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_default_circle_radius}')
+    label_results_default_circle_radius.pack()    
+    label_results_default_circle_diametre = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_default_spacing}')
+    label_results_default_circle_diametre.pack()
+    label_results_default_circle_area = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_default_circle_area}')
+    label_results_default_circle_area.pack()
+    
+
+    # Frame for Results Table Typical coloumn
+    self.frame_results_typical = tk.Frame(self.frame_results, background='#000000', height=290)
+    self.frame_results_typical.pack(side='left')
+
+    label_results_typical = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f' Typical Coverage ')
+    label_results_typical.pack()
+    label_results_typical_height_atr = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_height_atr}')
+    label_results_typical_height_atr.pack()    
+    label_results_typical_elevation_scan_angle = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'54.70\N{DEGREE SIGN}')
+    label_results_typical_elevation_scan_angle.pack()
+    label_results_typical_height_tag = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_height_tag}')
+    label_results_typical_height_tag.pack()
+    label_results_typical_hex_cell_area = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_hex_cell_area}')
+    label_results_typical_hex_cell_area.pack()
+    label_results_typical_spacing = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_spacing}')
+    label_results_typical_spacing.pack()
+    label_results_typical_circle_coverage_spacer = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'')
+    label_results_typical_circle_coverage_spacer.pack()
+    label_results_typical_circle_radius = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_circle_radius}')
+    label_results_typical_circle_radius.pack()    
+    label_results_typical_circle_diametre = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_spacing}')
+    label_results_typical_circle_diametre.pack()
+    label_results_typical_circle_area = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_circle_area}')
+    label_results_typical_circle_area.pack()
+    
+
+    # Frame for Results Table Max Accuracy coloumn
+    self.frame_results_max_accuracy = tk.Frame(self.frame_results, background='#000000', height=290)
+    self.frame_results_max_accuracy.pack(side='left')
+    
+    label_results_max_accuracy = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f' Maximum Accuracy Coverage ')
+    label_results_max_accuracy.pack()
+    label_results_max_accuracy_height_atr = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_height_atr}')
+    label_results_max_accuracy_height_atr.pack()    
+    label_results_max_accuracy_elevation_scan_angle = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'54.70\N{DEGREE SIGN}')
+    label_results_max_accuracy_elevation_scan_angle.pack()
+    label_results_max_accuracy_height_tag = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_height_tag}')
+    label_results_max_accuracy_height_tag.pack()
+    label_results_max_accuracy_hex_cell_area = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_max_accuracy_hex_cell_area}')
+    label_results_max_accuracy_hex_cell_area.pack()
+    label_results_max_accuracy_spacing = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_max_accuracy_spacing}')
+    label_results_max_accuracy_spacing.pack()
+    label_results_max_accuracy_circle_coverage_spacer = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'')
+    label_results_max_accuracy_circle_coverage_spacer.pack()
+    label_results_max_accuracy_circle_radius = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_circle_radius}')
+    label_results_max_accuracy_circle_radius.pack()    
+    label_results_max_accuracy_circle_diametre = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_spacing}')
+    label_results_max_accuracy_circle_diametre.pack()
+    label_results_max_accuracy_circle_area = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{self.results_output_typical_circle_area}')
+    label_results_max_accuracy_circle_area.pack()
+
+    self.frame_results.place_forget()
   
   
   def calculate(self, som, height_atr, height_tag):
@@ -113,7 +240,7 @@ class mainWindow():
     if check_input_number(user_input_height_atr, som[2], som[3]):
       if check_input_number(user_input_height_tag, 0, user_input_height_atr):
         self.results = results = calculate_coverage(user_input_height_atr, user_input_height_tag)
-        self.show_results()
+        self.update_results_display()
         
         # # Print out the default results - Uncomment if output to command line required.
         # description = f"Default"
@@ -189,153 +316,25 @@ class mainWindow():
   def reset(self):
     self.entry_height_atr_input.set(self.SoM_values[2])
     self.entry_height_tag_input.set('0')
-    if self.results_displayed == True:
-      self.frame_results_max_accuracy.destroy()
-      self.frame_results_typical.destroy()
-      self.frame_results_default.destroy()
-      self.frame_results_headings.destroy()
-      self.frame_results.destroy()
-      self.results_displayed = False
+    self.frame_results.place_forget()
 
 
-  def show_results(self):
-    self.results_displayed = True
-    results_output_height_atr = tk.StringVar()
-    results_output_height_tag = tk.StringVar()
-    results_output_height_max_accuracy = tk.StringVar()
-    results_output_default_circle_radius = tk.StringVar()
-    results_output_default_spacing = tk.StringVar()
-    results_output_default_circle_area = tk.StringVar()
-    results_output_default_hex_cell_area = tk.StringVar()
-    results_output_typical_circle_radius = tk.StringVar()
-    results_output_typical_spacing = tk.StringVar()
-    results_output_typical_circle_area = tk.StringVar()
-    results_output_typical_hex_cell_area = tk.StringVar()
-    results_output_max_accuracy_spacing = tk.StringVar()
-    results_output_max_accuracy_hex_cell_area = tk.StringVar()
-
-    results_output_height_atr.set(f'{self.results["height_atr"]:.2f} {self.SoM_units.get()}')
-    results_output_height_tag.set(f'{self.results["height_tag"]:.2f} {self.SoM_units.get()}')
-    results_output_height_max_accuracy.set(self.results["height_max_accuracy"])
-    results_output_default_circle_radius.set(f'{self.results["default_circle_radius"]:.2f} {self.SoM_units.get()}')
-    results_output_default_spacing.set(f'{self.results["default_spacing"]:.2f} {self.SoM_units.get()}')
-    results_output_default_circle_area.set(f'{self.results["default_circle_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
-    results_output_default_hex_cell_area.set(f'{self.results["default_hex_cell_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
-    results_output_typical_circle_radius.set(f'{self.results["typical_circle_radius"]:.2f} {self.SoM_units.get()}')
-    results_output_typical_spacing.set(f'{self.results["typical_spacing"]:.2f} {self.SoM_units.get()}')
-    results_output_typical_circle_area.set(f'{self.results["typical_circle_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
-    results_output_typical_hex_cell_area.set(f'{self.results["typical_hex_cell_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
-    results_output_max_accuracy_spacing.set(f'{self.results["max_accuracy_spacing"]:.2f} {self.SoM_units.get()} *')
-    results_output_max_accuracy_hex_cell_area.set(f'{self.results["max_accuracy_hex_cell_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
-
-    # Frame to contain Results Table frames
-    self.frame_results = tk.Frame(self.frame_content, background='#000000', height=290)
+  def update_results_display(self):
+    self.results_output_height_atr.set(f'{self.results["height_atr"]:.2f} {self.SoM_units.get()}')
+    self.results_output_height_tag.set(f'{self.results["height_tag"]:.2f} {self.SoM_units.get()}')
+    self.results_output_height_max_accuracy.set(self.results["height_max_accuracy"])
+    self.results_output_default_circle_radius.set(f'{self.results["default_circle_radius"]:.2f} {self.SoM_units.get()}')
+    self.results_output_default_spacing.set(f'{self.results["default_spacing"]:.2f} {self.SoM_units.get()}')
+    self.results_output_default_circle_area.set(f'{self.results["default_circle_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
+    self.results_output_default_hex_cell_area.set(f'{self.results["default_hex_cell_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
+    self.results_output_typical_circle_radius.set(f'{self.results["typical_circle_radius"]:.2f} {self.SoM_units.get()}')
+    self.results_output_typical_spacing.set(f'{self.results["typical_spacing"]:.2f} {self.SoM_units.get()}')
+    self.results_output_typical_circle_area.set(f'{self.results["typical_circle_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
+    self.results_output_typical_hex_cell_area.set(f'{self.results["typical_hex_cell_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
+    self.results_output_max_accuracy_spacing.set(f'{self.results["max_accuracy_spacing"]:.2f} {self.SoM_units.get()} *')
+    self.results_output_max_accuracy_hex_cell_area.set(f'{self.results["max_accuracy_hex_cell_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
+    
     self.frame_results.place(x=50, rely = 0.48)
-    
-    label_results_max_accuracy_note = tk.Label(self.frame_results, background='#000000', foreground='#FFFFFF', font=('Arial', 12), text=f'\n* For maximum accuracy coverage, ATR spacing has been reduced by 15%')
-    label_results_max_accuracy_note.pack(side='bottom')
-
-    # Frame for Results Table row headings
-    self.frame_results_headings = tk.Frame(self.frame_results, background='#000000', height=290)
-    self.frame_results_headings.pack(side='left')
-
-    label_heading_spacer = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15))
-    label_heading_spacer.pack(anchor='e')
-    label_heading_height_atr = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'ATR Mount Height')
-    label_heading_height_atr.pack(anchor='e')
-    label_heading_elevation_scan_angle = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Elevation Scan Angle')
-    label_heading_elevation_scan_angle.pack(anchor='e')
-    label_heading_height_tag = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Maximum/Average Tag Height')
-    label_heading_height_tag.pack(anchor='e')
-    label_heading_atr_hexagonal_coverage_area = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'ATR Hexagonal Coverage Area')
-    label_heading_atr_hexagonal_coverage_area.pack(anchor='e')
-    label_heading_atr_spacing = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'ATR Spacing')
-    label_heading_atr_spacing.pack(anchor='e')
-    label_heading_circle_coverage = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'FYI - Circle Coverage')
-    label_heading_circle_coverage.pack(anchor='w')
-    label_heading_circle_coverage_radius = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Radius')
-    label_heading_circle_coverage_radius.pack(anchor='e')
-    label_heading_circle_coverage_diametre = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Diametre')
-    label_heading_circle_coverage_diametre.pack(anchor='e')
-    label_heading_circle_coverage_area = tk.Label(self.frame_results_headings, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'Area')
-    label_heading_circle_coverage_area.pack(anchor='e')
-
-    # Frame for Results Table Default coloumn
-    self.frame_results_default = tk.Frame(self.frame_results, background='#000000', height=290)
-    self.frame_results_default.pack(side='left')
-
-    label_results_default = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f' Default Coverage ')
-    label_results_default.pack()
-    label_results_default_height_atr = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_height_atr}')
-    label_results_default_height_atr.pack()    
-    label_results_default_elevation_scan_angle = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'60.00\N{DEGREE SIGN}')
-    label_results_default_elevation_scan_angle.pack()
-    label_results_default_height_tag = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_height_tag}')
-    label_results_default_height_tag.pack()
-    label_results_default_hex_cell_area = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_default_hex_cell_area}')
-    label_results_default_hex_cell_area.pack()
-    label_results_default_spacing = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_default_spacing}')
-    label_results_default_spacing.pack()
-    label_results_default_circle_coverage_spacer = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'')
-    label_results_default_circle_coverage_spacer.pack()
-    label_results_default_circle_radius = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_default_circle_radius}')
-    label_results_default_circle_radius.pack()    
-    label_results_default_circle_diametre = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_default_spacing}')
-    label_results_default_circle_diametre.pack()
-    label_results_default_circle_area = tk.Label(self.frame_results_default, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_default_circle_area}')
-    label_results_default_circle_area.pack()
-    
-
-    # Frame for Results Table Typical coloumn
-    self.frame_results_typical = tk.Frame(self.frame_results, background='#000000', height=290)
-    self.frame_results_typical.pack(side='left')
-
-    label_results_typical = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f' Typical Coverage ')
-    label_results_typical.pack()
-    label_results_typical_height_atr = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_height_atr}')
-    label_results_typical_height_atr.pack()    
-    label_results_typical_elevation_scan_angle = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'54.70\N{DEGREE SIGN}')
-    label_results_typical_elevation_scan_angle.pack()
-    label_results_typical_height_tag = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_height_tag}')
-    label_results_typical_height_tag.pack()
-    label_results_typical_hex_cell_area = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_hex_cell_area}')
-    label_results_typical_hex_cell_area.pack()
-    label_results_typical_spacing = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_spacing}')
-    label_results_typical_spacing.pack()
-    label_results_typical_circle_coverage_spacer = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'')
-    label_results_typical_circle_coverage_spacer.pack()
-    label_results_typical_circle_radius = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_circle_radius}')
-    label_results_typical_circle_radius.pack()    
-    label_results_typical_circle_diametre = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_spacing}')
-    label_results_typical_circle_diametre.pack()
-    label_results_typical_circle_area = tk.Label(self.frame_results_typical, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_circle_area}')
-    label_results_typical_circle_area.pack()
-    
-
-    # Frame for Results Table Max Accuracy coloumn
-    self.frame_results_max_accuracy = tk.Frame(self.frame_results, background='#000000', height=290)
-    self.frame_results_max_accuracy.pack(side='left')
-    
-    label_results_max_accuracy = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f' Maximum Accuracy Coverage ')
-    label_results_max_accuracy.pack()
-    label_results_max_accuracy_height_atr = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_height_atr}')
-    label_results_max_accuracy_height_atr.pack()    
-    label_results_max_accuracy_elevation_scan_angle = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'54.70\N{DEGREE SIGN}')
-    label_results_max_accuracy_elevation_scan_angle.pack()
-    label_results_max_accuracy_height_tag = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_height_tag}')
-    label_results_max_accuracy_height_tag.pack()
-    label_results_max_accuracy_hex_cell_area = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_max_accuracy_hex_cell_area}')
-    label_results_max_accuracy_hex_cell_area.pack()
-    label_results_max_accuracy_spacing = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_max_accuracy_spacing}')
-    label_results_max_accuracy_spacing.pack()
-    label_results_max_accuracy_circle_coverage_spacer = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), text=f'')
-    label_results_max_accuracy_circle_coverage_spacer.pack()
-    label_results_max_accuracy_circle_radius = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_circle_radius}')
-    label_results_max_accuracy_circle_radius.pack()    
-    label_results_max_accuracy_circle_diametre = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_spacing}')
-    label_results_max_accuracy_circle_diametre.pack()
-    label_results_max_accuracy_circle_area = tk.Label(self.frame_results_max_accuracy, background='#000000', foreground='#FFFFFF', font=('Arial', 15), textvariable=f'{results_output_typical_circle_area}')
-    label_results_max_accuracy_circle_area.pack()
 
 
   def update_SoM(self):

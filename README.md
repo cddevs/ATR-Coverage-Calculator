@@ -1,11 +1,15 @@
 # ATR Coverage Calculator
 By providing ATR and Tag height values, this program will calculate the probable coverage area for a single ATR 7000.
 
-This is version 3.0.0, written by Craig D'Costa using Python 3.9.6 and released on September 10 2021. 
+This is version 3.0.1, written by Craig D'Costa using Python 3.9.6 and released on September 14 2021. 
 
 The area calculation formulas implemented are available on pages 22 and 23 of the ZAATS Deployment User Guide.
 
 ## Version History
+
+### 3.0.1
+###### September 14 2021
+1. Resolved a bug in which displayed calculations were not being removed when the rest button was clicked.
 
 ### 3.0.0
 ###### September 10 2021

@@ -21,7 +21,7 @@ class mainWindow():
   def __init__(self, master):
     self.master = master
     # tk.Frame.__init__(self, self.master)
-    self.first_calc = False
+    self.results_displayed = False
     self.configure_gui()
     self.create_widgets()
     self.destroy_splash_and_start()
@@ -30,8 +30,8 @@ class mainWindow():
   def about(self):
     messagebox.showinfo('About', \
       f'ATR Coverage Calculator\
-      \n\n\tVersion: 3.0.0\
-      \n\n\tRelease Date: Friday September 10 2021\
+      \n\n\tVersion: 3.0.1\
+      \n\n\tRelease Date: Tuesday September 14 2021\
       \n\nhttps://github.com/cddevs/ATR-Coverage-Calculator/releases\
       \n\n©{self.current_date.year} C. D\'Costa'
     )
@@ -108,7 +108,6 @@ class mainWindow():
   
   
   def calculate(self, som, height_atr, height_tag):
-    self.first_calc = True
     user_input_height_atr = height_atr
     user_input_height_tag = height_tag
     if check_input_number(user_input_height_atr, som[2], som[3]):
@@ -190,15 +189,17 @@ class mainWindow():
   def reset(self):
     self.entry_height_atr_input.set(self.SoM_values[2])
     self.entry_height_tag_input.set('0')
-    if self.first_calc == True:
+    if self.results_displayed == True:
       self.frame_results_max_accuracy.destroy()
       self.frame_results_typical.destroy()
       self.frame_results_default.destroy()
       self.frame_results_headings.destroy()
       self.frame_results.destroy()
+      self.results_displayed = False
 
 
   def show_results(self):
+    self.results_displayed = True
     results_output_height_atr = tk.StringVar()
     results_output_height_tag = tk.StringVar()
     results_output_height_max_accuracy = tk.StringVar()

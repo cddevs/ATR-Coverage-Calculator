@@ -9,7 +9,7 @@ The area calculation formulas implemented are available on pages 22 and 23 of th
 
 ### 3.0.1
 ###### September 14 2021
-1. Resolved a bug in which displayed calculations were not being removed when the reset button was clicked.
+1. Resolved a bug in which displayed calculations were not being removed when the resete button was clicked.
 
 ### 3.0.0
 ###### September 10 2021

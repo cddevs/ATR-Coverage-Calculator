@@ -29,8 +29,8 @@ class mainWindow():
   def about(self):
     messagebox.showinfo('About', \
       f'ATR Coverage Calculator\
-      \n\n\tVersion: 3.0.2\
-      \n\n\tRelease Date: Tuesday September 14 2021\
+      \n\n\tVersion: 3.0.3\
+      \n\n\tRelease Date: Monday February 7 2022\
       \n\nhttps://github.com/cddevs/ATR-Coverage-Calculator/releases\
       \n\n©{self.current_date.year} C. D\'Costa'
     )
@@ -103,6 +103,13 @@ class mainWindow():
     menu_system_of_measurement.add_radiobutton(label='Metric', variable=self.SoM, value='Metric', command=self.update_SoM) 
     menu_system_of_measurement.add_radiobutton(label='Imperial', variable=self.SoM, value='Imperial', command=self.update_SoM) 
     self.menubar.add_cascade(label='System of Measurement', menu=menu_system_of_measurement)
+    
+    self.atr_height_override = tk.StringVar()
+    self.atr_height_override.set('Disable')
+    menu_atr_height_override = tk.Menu(self.master, tearoff=0)
+    menu_atr_height_override.add_radiobutton(label='Enable', variable=self.atr_height_override, value='Enable', command=self.update_atr_height_override) 
+    menu_atr_height_override.add_radiobutton(label='Disable', variable=self.atr_height_override, value='Disable', command=self.update_atr_height_override) 
+    self.menubar.add_cascade(label='ATR Height Override', menu=menu_atr_height_override)
     
     self.menubar.add_command(label='About', command=self.about)
 
@@ -237,35 +244,41 @@ class mainWindow():
   def calculate(self, som, height_atr, height_tag):
     user_input_height_atr = height_atr
     user_input_height_tag = height_tag
-    if check_input_number(user_input_height_atr, som[2], som[3]):
-      if check_input_number(user_input_height_tag, 0, user_input_height_atr):
-        self.results = results = calculate_coverage(user_input_height_atr, user_input_height_tag)
-        self.update_results_display()
-        
-        # # Print out the default results - Uncomment if output to command line required.
-        # description = f"Default"
-        # printout_coverage(description, som[1], 60.00, results["height_atr"], 0, results["default_hex_cell_area"], results["default_spacing"], results["default_circle_radius"], results["default_spacing"], results["default_circle_area"])
+    if float(user_input_height_atr) > 0:
+      if check_input_number(user_input_height_atr, som[2], som[3]) or self.atr_height_override.get() == 'Enable':
+        if check_input_number(user_input_height_tag, 0, user_input_height_atr):
+          self.results = results = calculate_coverage(user_input_height_atr, user_input_height_tag)
+          self.update_results_display()
+          
+          # # Print out the default results - Uncomment if output to command line required.
+          # description = f"Default"
+          # printout_coverage(description, som[1], 60.00, results["height_atr"], 0, results["default_hex_cell_area"], results["default_spacing"], results["default_circle_radius"], results["default_spacing"], results["default_circle_area"])
 
-        # # Print out the typical results
-        # description = f"Typical"
-        # printout_coverage(description, som[1], 54.70, results["height_atr"], results["height_tag"], results["typical_hex_cell_area"], results["typical_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"])
+          # # Print out the typical results
+          # description = f"Typical"
+          # printout_coverage(description, som[1], 54.70, results["height_atr"], results["height_tag"], results["typical_hex_cell_area"], results["typical_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"])
 
-        # # Print out the max results
-        # description = f"Maximum Accuracy"
-        # notes = "Please note, to achieve maximum accuracy, spacing has been reduced by 15%."
-        # printout_coverage(description, som[1], 54.70, results["height_atr"], results["height_tag"], results["max_accuracy_hex_cell_area"], results["max_accuracy_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"], notes)
+          # # Print out the max results
+          # description = f"Maximum Accuracy"
+          # notes = "Please note, to achieve maximum accuracy, spacing has been reduced by 15%."
+          # printout_coverage(description, som[1], 54.70, results["height_atr"], results["height_tag"], results["max_accuracy_hex_cell_area"], results["max_accuracy_spacing"], results["typical_circle_radius"], results["typical_spacing"], results["typical_circle_area"], notes)
+        else:
+          # print(f'\nError: Invalid Tag height. Accepted values are between 0.00 and {user_input_height_atr} {som[1]} inclusive.')
+          messagebox.showerror('Error', \
+            f'Invalid Tag height.\
+              \n\nAccepted values are between 0.00 and {user_input_height_atr} {som[1]} inclusive.'
+          )
       else:
-        # print(f'\nError: Invalid Tag height. Accepted values are between 0.00 and {user_input_height_atr} {som[1]} inclusive.')
+        # print(f"\nError: Invalid ATR height. Accepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.")
         messagebox.showerror('Error', \
-          f'Invalid Tag height.\
-            \n\nAccepted values are between 0.00 and {user_input_height_atr} {som[1]} inclusive.'
+          f'Invalid ATR height.\
+            \n\nAccepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.'
         )
     else:
-      # print(f"\nError: Invalid ATR height. Accepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.")
-      messagebox.showerror('Error', \
-        f'Invalid ATR height.\
-          \n\nAccepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.'
-      )
+        messagebox.showerror('Error', \
+          f'Invalid ATR height.\
+            \n\nAccepted value needs to be greater then 0.00.'
+        )
 
 
   def calculation_input(self):
@@ -335,6 +348,12 @@ class mainWindow():
     self.results_output_max_accuracy_hex_cell_area.set(f'{self.results["max_accuracy_hex_cell_area"]:.2f} {self.SoM_units.get()}\N{SUPERSCRIPT TWO}')
     
     self.frame_results.place(x=50, rely = 0.48)
+
+  
+  def update_atr_height_override(self):
+    self.reset()
+    messagebox.showwarning('ATR Height',\
+      f'Override: {self.atr_height_override.get()}d.')
 
 
   def update_SoM(self):

@@ -88,7 +88,7 @@ def coverage(som):
                     print(f"\nError: Invalid Tag height. Accepted values are between 0.00 and {user_input_height_atr} {som[1]} inclusive.")
             break # Break ATR height input loop
         else:
-            print(f"\nError: Invalid ATR height. Accepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.")
+            print(f"\nError: Invalid ATR height. Accepted values are between {som[2]:.4f} and {som[3]:.4f} {som[1]} inclusive.")
 
 
 def printout_coverage(description, uom, scan_angle, height_atr, height_tag, hex_cell_area, spacing, circle_radius, circle_diametre, circle_area, notes = ""):

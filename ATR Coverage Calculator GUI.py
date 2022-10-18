@@ -29,8 +29,8 @@ class mainWindow():
   def about(self):
     messagebox.showinfo('About', \
       f'ATR Coverage Calculator\
-      \n\n\tVersion: 3.0.3\
-      \n\n\tRelease Date: Monday February 7 2022\
+      \n\n\tVersion: 3.0.4\
+      \n\n\tRelease Date: Tueday October 18 2022\
       \n\nhttps://github.com/cddevs/ATR-Coverage-Calculator/releases\
       \n\n©{self.current_date.year} C. D\'Costa'
     )
@@ -269,10 +269,10 @@ class mainWindow():
               \n\nAccepted values are between 0.00 and {user_input_height_atr} {som[1]} inclusive.'
           )
       else:
-        # print(f"\nError: Invalid ATR height. Accepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.")
+        # print(f"\nError: Invalid ATR height. Accepted values are between {som[2]:.4f} and {som[3]:.4f} {som[1]} inclusive.")
         messagebox.showerror('Error', \
           f'Invalid ATR height.\
-            \n\nAccepted values are between {som[2]:.2f} and {som[3]:.2f} {som[1]} inclusive.'
+            \n\nAccepted values are between {som[2]:.4f} and {som[3]:.4f} {som[1]} inclusive.'
         )
     else:
         messagebox.showerror('Error', \
